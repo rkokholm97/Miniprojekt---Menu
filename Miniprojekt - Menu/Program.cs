@@ -7,8 +7,8 @@ namespace Miniprojekt___Menu
     {
         static void Main(string[] args)
         {
-            //List<MenuItem> items = new List<MenuItem>();
-            Menu menu = new Menu("Menu1");
+   
+            Menu menu = new Menu("Fancy Menu");
             menu.AddMenuItem(new MenuItem("Item 1", "Content of item 1"));
             menu.AddMenuItem(new MenuItem("Item 2", "Content of item 2"));
             menu.AddMenuItem(new MenuItem("Item 3", "Content of item 3"));
@@ -24,7 +24,6 @@ namespace Miniprojekt___Menu
         public int Index { get; set; }
 
         public bool running { get; set; }
-        public int SelectedItemId { get; set; }
         public string MenuTitle { get; set; }
         private List<MenuItem> items = new List<MenuItem>();
 
@@ -47,14 +46,22 @@ namespace Miniprojekt___Menu
 
         public void DrawMenu()
         {
+            Console.SetCursorPosition((Console.WindowWidth - MenuTitle.Length) / 2, Console.CursorTop);
+            Console.ForegroundColor = ConsoleColor.Blue;
+            Console.WriteLine($"{MenuTitle}");
+
+            Console.WriteLine("");
 
             int i = 0;
-
             foreach (MenuItem item in items)
             {
+                Console.SetCursorPosition((Console.WindowWidth - item.Title.Length) / 2, Console.CursorTop);
+                Console.ForegroundColor = ConsoleColor.White;
+
                 if (Index == i)
                 {
-                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.BackgroundColor = ConsoleColor.Cyan;
+                    Console.ForegroundColor = ConsoleColor.Black;
                     Console.WriteLine($"{item.Title}");
                 } else
                 {
@@ -85,7 +92,7 @@ namespace Miniprojekt___Menu
                     handler.MoveDown(this);
                     break;
                 case ConsoleKey.Enter:
-                    handler.Select();
+                    handler.Select(Items[Index]);
                     break;
                 default:
                     break;
@@ -94,14 +101,11 @@ namespace Miniprojekt___Menu
 
         public void Start()
         {
+            DrawMenu();
             running = true;
-            do
-            {
-                Console.Clear();
-                DrawMenu();
+            while(running == true) {
                 HandleInput();
-                
-            } while (running == true);
+            };
             
             
         }
@@ -118,16 +122,15 @@ namespace Miniprojekt___Menu
             Content = content;
         }
 
-        public void Select()
-        {
-
-        }
     }
+
+    
 
     public class InputHandler
     {
         public void MoveUp(Menu menu)
         {
+            Console.Clear();
             if (menu.Index >= 0)
             {
                 menu.Index -= 1;
@@ -135,11 +138,12 @@ namespace Miniprojekt___Menu
             {
                 menu.Index = menu.Items.Count - 1;
             }
-                
+            menu.DrawMenu();
         }
 
         public void MoveDown(Menu menu)
         {
+            Console.Clear();
             if (menu.Index <= menu.Items.Count - 1)
             {
                 menu.Index += 1;
@@ -147,12 +151,17 @@ namespace Miniprojekt___Menu
             {
                 menu.Index = 0;
             }
-            
+            menu.DrawMenu();
         }
 
-        public void Select()
+        public void Select(MenuItem item)
         {
-            // ...
+            Console.WriteLine("");
+            Console.SetCursorPosition((Console.WindowWidth - item.Content.Length) / 2, Console.CursorTop);
+            
+            Console.WriteLine($"{item.Content}");
+            
+
         }
     }
 }
